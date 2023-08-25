@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batman's Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <div class="tab">
+           <h1>Java Script-Quiz</h1>
+           <div class="question">
+            <h2 id="ques">Question</h2>
+            <div id="choice">
+                <button class="ans">Answer</button>
+                <button class="ans">Answer</button>
+                <button class="ans">Answer</button>
+                <button class="ans">Answer</button>
+            </div>
+           
+            <div >
+                 <button id="next">Next</button>
+                
+                </div>
+           </div>
+           <div id="timer"></div>
+        </div>
+        <script>
+           let q = [
+  {
+    ques: "1. What is the Full form JS?",
+    choice: [{ op: "Java Script", res: "true" },{ op: "John Susai", res: "false" }, { op: "Jina Saana", res: "false" },{ op: "Jinger Script", res: "false" }]
+  },
+  {
+                ques:"2. Main use of JS ?",
+                choice:[{ op:"Cooking", res:"false"},{ op:"Cleaning", res:"false"},{ op:"User Interactive", res:"true"},{ op:"Matrimony", res:"false"}]
+            },
+            {
+                ques:"3. Who developed JS ?",
+                choice:[{ op:"Your Father", res:"false"},{ op:"Brendan Eich", res:"true"},{ op:"Kanja Karuppu", res:"false"},{ op:"Gp Muthu", res:"false"}]
+            },
+            {
+                ques:'4. How do you write "IM Vengeance" in an alert box?',
+                choice:[{ op:'prompt("IM Batman")', res:"false"},{ op:"alert('IM Vengence')", res:"false"},{ op:"alert('IM Vengeance')", res:"true"},{ op:"confirm('Hello World')", res:"false"}]
+            },
+            {
+                ques:"5. How to create a function in JS ?",
+                choice:[{ op:"function f(){}", res:"true"},{ op:"Booking Marriage Hall", res:""},{ op:"Func f{}", res:"false"},{ op:"fuct F(){}", res:"false"}]
+}];
+
+
+let points = 0;
+const question = document.getElementById("ques");
+const choices = document.getElementById("choice");
+const next_bt = document.getElementById("next");
+let timerElement = document.getElementById("timer");
+let timer;
+let timeLeft = 25; 
+let i = 0;
+
+function quiz() {
+  resetTimer();
+  startTimer();
+  deleteans();
+  let quest = q[i];
+  question.innerHTML = quest.ques;
+  quest.choice.forEach((ans) => {
+    const bt = document.createElement("button");
+    bt.innerHTML = ans.op;
+    bt.classList.add("ans");
+    choices.appendChild(bt);
+    if (ans.res) {
+      bt.dataset.res = ans.res; 
+    }
+    bt.addEventListener("click", answers);
+  });
+}
+
+function answers(clicks) {
+  let click = clicks.target;
+  let a = click.dataset.res === "true"; 
+  if (a) {
+    click.classList.add("wrong");
+    points++; 
+  } else {
+    click.classList.add("wrong");
+  }
+  Array.from(choices.children).forEach((bt) => {
+    if (bt.dataset.res === "true") {
+      bt.classList.add("right");
+    }
+    bt.disabled = true;
+  });
+  next_bt.style.display = "block";
+}
+
+function deleteans() {
+  next_bt.style.display = "none";
+  while (choices.firstChild) {
+    choices.removeChild(choices.firstChild);
+  }
+}
+
+function quizz() {
+  resetTimer();
+  startTimer();
+  i++;
+  if (i < q.length) {
+    quiz();
+  } else {
+    clearInterval(timer);
+    deleteans();
+    question.innerHTML = `You have scored ${points} out of 5`;
+    next_bt.innerHTML = "BYE!";
+    timerElement.style.display="none";
+    next_bt.style.display = "block";
+  }
+}
+
+next_bt.addEventListener("click", () => {
+  i < q.length?quizz():alert("Thank you!");
+});
+
+
+function startTimer() {
+  timer = setInterval(() => {
+    if (timeLeft > 0) {
+      timerElement.innerHTML = `Time Left: ${timeLeft} seconds`;
+      timeLeft--;
+    } else {
+      clearInterval(timer);
+      timerElement.innerHTML = "Time's up!";
+      disableButtons();
+      next_bt.style.display = "block";
+    }
+  }, 1000);
+}
+
+function disableButtons() {
+  Array.from(choices.children).forEach((bt) => {
+    bt.disabled = true;
+  });
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10; // Reset the timer to initial value for each question
+  timerElement.innerHTML = "";
+}
+
+
+  
+
+quiz();
+
+             
+
+  </script>
+</body>
+</html>
